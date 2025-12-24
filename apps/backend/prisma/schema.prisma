@@ -13,10 +13,11 @@ enum Role {
 }
 
 enum RentalStatus {
-  PENDING
+  REQUESTED
   APPROVED
-  REJECTED
-  ACTIVE
+  PAYMENT_PENDING
+  PAID
+  IN_PROGRESS
   COMPLETED
   CANCELLED
 }
@@ -26,6 +27,11 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+}
+
+enum EquipmentStatus {
+  ACTIVE
+  INACTIVE
 }
 
 model User {
@@ -59,16 +65,16 @@ model Company {
 }
 
 model Equipment {
-  id          String   @id @default(uuid())
+  id          String          @id @default(uuid())
   name        String
   description String
-  price       Decimal  @db.Decimal(10, 2) // Price per day
+  price       Decimal         @db.Decimal(10, 2) // Price per day
   imageUrl    String?
-  available   Boolean  @default(true)
+  status      EquipmentStatus @default(ACTIVE)
   companyId   String
-  company     Company  @relation(fields: [companyId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  company     Company         @relation(fields: [companyId], references: [id])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   rentals     Rental[]
 
@@ -84,7 +90,7 @@ model Rental {
   startDate   DateTime
   endDate     DateTime
   totalPrice  Decimal      @db.Decimal(10, 2)
-  status      RentalStatus @default(PENDING)
+  status      RentalStatus @default(REQUESTED)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 

@@ -1,0 +1,313 @@
+{
+    "info": {
+        "_postman_id": "event-equipment-marketplace-id",
+        "name": "Event Equipment Marketplace MVP",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.access_token) {",
+                                    "    pm.environment.set(\"accessToken\", jsonData.access_token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"123456\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/login",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Equipments",
+            "item": [
+                {
+                    "name": "Create Equipment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Guitarra Fender\",\n    \"description\": \"Guitarra elétrica Stratocaster\",\n    \"price\": 150.00,\n    \"imageUrl\": \"https://example.com/guitar.jpg\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/equipments",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "equipments"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Equipment",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"price\": 180.00,\n    \"active\": false\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/equipments/:id",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "equipments",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "EQUIPMENT_ID_HERE"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "List Active Equipments (Public)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/equipments",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "equipments"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "List My Equipments (Company)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/equipments/my",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "equipments",
+                                "my"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Rentals",
+            "item": [
+                {
+                    "name": "Request Rental",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"equipmentId\": \"EQUIPMENT_UUID\",\n    \"startDate\": \"2024-12-25\",\n    \"endDate\": \"2024-12-27\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/rentals",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "rentals"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Approve Rental (Company)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/rentals/:id/approve",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "rentals",
+                                ":id",
+                                "approve"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "RENTAL_ID_HERE"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Pay Rental (Mock)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/rentals/:id/pay",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "rentals",
+                                ":id",
+                                "pay"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "RENTAL_ID_HERE"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "List My Rentals",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/rentals/my",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "rentals",
+                                "my"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "List Company Rentals",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/rentals/company",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "rentals",
+                                "company"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000",
+            "type": "string"
+        },
+        {
+            "key": "accessToken",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}
